@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سامانه رزرو غذا کارکنان</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+:root{
+  --bg1:#0f172a; --bg2:#1e293b;
+  --accent:#f59e0b; --accent2:#fb923c;
+  --green:#22c55e; --green-soft:rgba(34,197,94,.15);
+  --red:#ef4444; --red-soft:rgba(239,68,68,.12);
+  --card:rgba(255,255,255,.06);
+  --border:rgba(255,255,255,.12);
+  --text:#f1f5f9; --muted:#94a3b8;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Vazirmatn',sans-serif}
+body{
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 60%,#312e1f 100%);
+  color:var(--text); padding:24px 16px 60px;
+}
+.wrap{max-width:1050px;margin:0 auto}
+header{text-align:center;margin-bottom:28px}
+.logo{
+  display:inline-flex;align-items:center;gap:12px;
+  background:var(--card);border:1px solid var(--border);
+  padding:14px 28px;border-radius:20px;backdrop-filter:blur(10px);
+}
+.logo .icon{
+  width:48px;height:48px;border-radius:14px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;font-size:26px;
+  box-shadow:0 8px 24px rgba(245,158,11,.35);
+}
+h1{font-size:22px;font-weight:800}
+header p{color:var(--muted);font-size:13px;margin-top:6px}
+.topbar{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.badge{
+  background:var(--card);border:1px solid var(--border);border-radius:30px;
+  padding:8px 18px;font-size:13px;display:inline-flex;align-items:center;gap:8px;
+}
+.badge b{color:var(--accent)}
+.badge .role{font-size:11px;color:var(--muted)}
+.login-screen{min-height:70vh;display:flex;align-items:center;justify-content:center}
+.login-card{
+  background:var(--card);border:1px solid var(--border);border-radius:24px;
+  padding:30px 26px;backdrop-filter:blur(12px);width:100%;max-width:420px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+.login-card h2{font-size:17px;font-weight:800;text-align:center;margin-bottom:4px}
+.login-card .sub{color:var(--muted);font-size:12px;text-align:center;margin-bottom:18px}
+.tabs{display:flex;gap:6px;background:rgba(0,0,0,.3);padding:5px;border-radius:14px;margin-bottom:18px}
+.tabs button{
+  flex:1;padding:10px 4px;border:none;border-radius:10px;cursor:pointer;
+  background:transparent;color:var(--muted);font-family:inherit;font-size:12.5px;font-weight:700;transition:.2s;
+}
+.tabs button.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#1e1300}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.field input{
+  width:100%;padding:13px 16px;border-radius:12px;
+  border:1px solid var(--border);background:rgba(0,0,0,.25);
+  color:var(--text);font-size:14px;outline:none;transition:.2s;
+}
+.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,158,11,.15)}
+.field input::placeholder{color:var(--muted)}
+.login-err{
+  display:none;background:var(--red-soft);border:1px solid rgba(239,68,68,.35);
+  color:#fca5a5;border-radius:10px;padding:9px 14px;font-size:12px;margin-bottom:12px;
+  word-break:break-word;line-height:1.7;
+}
+.hint{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.8}
+.hint b{color:var(--accent)}
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:20px;backdrop-filter:blur(10px);
+  margin-bottom:20px;
+}
+.card h2{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.add-row{display:flex;gap:10px;flex-wrap:wrap}
+.add-row input{
+  flex:1;min-width:200px;padding:13px 16px;border-radius:12px;
+  border:1px solid var(--border);background:rgba(0,0,0,.25);
+  color:var(--text);font-size:14px;outline:none;transition:.2s;
+}
+.add-row input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,158,11,.15)}
+.add-row input::placeholder{color:var(--muted)}
+.btn{
+  padding:12px 22px;border:none;border-radius:12px;cursor:pointer;
+  font-family:inherit;font-size:14px;font-weight:700;transition:.2s;
+}
+.btn-accent{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#1e1300;box-shadow:0 6px 18px rgba(245,158,11,.3)}
+.btn-accent:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(245,158,11,.4)}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-ghost:hover{color:var(--text);border-color:var(--accent)}
+.btn-sm{padding:8px 16px;font-size:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,0,0,.25);border:1px solid var(--border);
+  padding:8px 8px 8px 14px;border-radius:30px;font-size:13px;
+  animation:pop .25s ease;
+}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.chip .avatar{
+  width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#1e1300;font-size:12px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+}
+.chip button{
+  width:20px;height:20px;border-radius:50%;border:none;cursor:pointer;
+  background:var(--red-soft);color:var(--red);font-size:12px;line-height:1;
+}
+.chip button:hover{background:var(--red);color:#fff}
+.empty{color:var(--muted);font-size:13px;text-align:center;padding:10px}
+.acc-row{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  background:rgba(0,0,0,.22);border:1px solid var(--border);
+  border-radius:14px;padding:12px 14px;margin-bottom:10px;
+}
+.acc-name{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;min-width:170px}
+.acc-name .avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#1e1300;font-size:12px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+}
+.acc-row input{
+  flex:1;min-width:130px;padding:10px 14px;border-radius:10px;
+  border:1px solid var(--border);background:rgba(0,0,0,.25);
+  color:var(--text);font-size:13px;outline:none;transition:.2s;
+}
+.acc-row input:focus{border-color:var(--accent)}
+.acc-status{font-size:11px;color:var(--muted);min-width:90px}
+.acc-status.ok{color:var(--green)}
+.table-card{overflow-x:auto;padding:14px}
+table{width:100%;border-collapse:separate;border-spacing:0 6px;min-width:760px}
+th,td{padding:8px 6px;text-align:center}
+thead th{font-size:12px;color:var(--muted);font-weight:700;padding-bottom:10px}
+thead th.day{color:var(--text);font-size:13px}
+tbody tr{background:rgba(0,0,0,.22)}
+tbody tr:hover{background:rgba(0,0,0,.35)}
+td.name{text-align:right;padding-right:14px;font-weight:700;font-size:13px;white-space:nowrap}
+td.name .sub{display:block;font-size:10px;font-weight:400;color:var(--muted)}
+.day-cell{display:flex;flex-direction:column;gap:5px;align-items:center}
+.toggle{
+  width:34px;height:22px;border-radius:20px;cursor:pointer;position:relative;
+  background:rgba(255,255,255,.12);transition:.2s;border:none;
+}
+.toggle::after{
+  content:'';position:absolute;top:3px;right:3px;width:16px;height:16px;
+  border-radius:50%;background:#94a3b8;transition:.2s;
+}
+.toggle.on{background:var(--green)}
+.toggle.on::after{right:15px;background:#fff}
+.toggle.busy{opacity:.5;pointer-events:none}
+.toggle.ro{pointer-events:none}
+.toggle.fresh{animation:pulse 1.6s infinite}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,.4)}
+  50%{box-shadow:0 0 0 7px rgba(34,197,94,.15)}
+}
+.meal-row{display:flex;align-items:center;gap:5px}
+.meal-row span{font-size:10px;color:var(--muted);width:38px;text-align:right}
+td.total{font-weight:800;color:var(--accent);font-size:13px}
+tr.footer-row td{border-top:1px dashed var(--border);color:var(--muted);font-size:11px;padding-top:10px}
+.days-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.day-card{
+  background:rgba(0,0,0,.25);border:1px solid var(--border);
+  border-radius:16px;padding:14px 16px;transition:.2s;position:relative;
+}
+.day-card.today{
+  border-color:var(--accent);
+  background:linear-gradient(160deg,rgba(245,158,11,.12),rgba(0,0,0,.25));
+  box-shadow:0 6px 20px rgba(245,158,11,.18);
+}
+.day-card.today::before{
+  content:'امروز';position:absolute;top:12px;left:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#1e1300;
+  font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;
+}
+.day-card .d-name{font-size:14px;font-weight:800}
+.day-card .d-counts{margin-top:12px;display:flex;flex-direction:column;gap:7px}
+.d-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted)}
+.d-row .d-val{
+  font-weight:800;font-size:13px;color:var(--text);
+  background:rgba(255,255,255,.08);border-radius:8px;
+  min-width:28px;text-align:center;padding:2px 6px;
+}
+.d-row.zero .d-val{color:var(--muted);background:rgba(255,255,255,.04)}
+.d-total{
+  margin-top:12px;padding-top:10px;border-top:1px dashed var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;color:var(--muted);
+}
+.d-total b{color:var(--accent);font-size:16px}
+.actions{display:flex;gap:10px;justify-content:flex-start;flex-wrap:wrap;margin-top:14px}
+.sync-status{
+  text-align:center;font-size:11px;color:var(--muted);margin-bottom:12px;
+}
+.fresh-tag{
+  background:var(--green-soft);border:1px solid rgba(34,197,94,.4);
+  color:#4ade80;font-size:11px;font-weight:700;
+  padding:4px 12px;border-radius:20px;white-space:nowrap;
+}
+.recent-item{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  background:rgba(0,0,0,.22);border:1px solid var(--border);
+  border-radius:14px;padding:11px 14px;margin-bottom:8px;font-size:13px;
+  animation:pop .25s ease;
+}
+.recent-item b{color:var(--text)}
+.recent-item .what{color:var(--muted);font-size:12px}
+@media(max-width:640px){
+  h1{font-size:18px}
+  .card{padding:14px}
+  .days-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  .acc-name{min-width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= صفحه ورود ================= -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div style="text-align:center;margin-bottom:14px">
+      <div style="display:inline-flex;width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));align-items:center;justify-content:center;font-size:26px;box-shadow:0 8px 24px rgba(245,158,11,.35)">🍽️</div>
+    </div>
+    <h2>سامانه رزرو وعده‌های غذایی</h2>
+    <div class="sub">برای ادامه وارد شوید</div>
+
+    <div class="tabs">
+      <button id="tabAdmin" class="active" onclick="switchTab('admin')">ورود مدیر</button>
+      <button id="tabEmp" onclick="switchTab('emp')">ورود کارمند</button>
+      <button id="tabSup" onclick="switchTab('sup')">ورود مسوول</button>
+    </div>
+
+    <div class="login-err" id="loginErr"></div>
+
+    <form id="formAdmin" onsubmit="return loginAdmin(event)">
+      <div class="field">
+        <label>ایمیل مدیر</label>
+        <input id="admEmail" type="email" placeholder="admin@company.com" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>رمز عبور</label>
+        <input id="admPass" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-accent" style="width:100%" type="submit" id="btnAdmLogin">ورود به پنل مدیریت</button>
+    </form>
+
+    <form id="formEmp" style="display:none" onsubmit="return loginEmployee(event)">
+      <div class="field">
+        <label>نام کاربری</label>
+        <input id="empUser" type="text" placeholder="نام کاربری که مدیر به شما داده است" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>رمز عبور</label>
+        <input id="empPass" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-accent" style="width:100%" type="submit" id="btnEmpLogin">ورود</button>
+    </form>
+
+    <form id="formSup" style="display:none" onsubmit="return loginSupervisor(event)">
+      <div class="field">
+        <label>نام کاربری مسوول</label>
+        <input id="lgSupUser" type="text" placeholder="نام کاربری که مدیر به شما داده است" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>رمز عبور</label>
+        <input id="lgSupPass" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-accent" style="width:100%" type="submit" id="btnSupLogin">ورود به پنل مسوول</button>
+    </form>
+
+    <div class="hint">
+      ثبت‌نام در سامانه امکان‌پذیر نیست —<br>
+      حساب کاربری شما را <b>مدیر</b> ایجاد می‌کند.
+    </div>
+  </div>
+</div>
+
+<!-- ================= اپلیکیشن ================= -->
+<div class="wrap" id="appScreen" style="display:none">
+
+  <header>
+    <div class="logo">
+      <div class="icon">🍽️</div>
+      <div>
+        <h1>سامانه رزرو وعده‌های غذایی</h1>
+        <p id="headerSub">ثبت حضور کارکنان در وعده‌های صبحانه، ناهار و شام — برنامه ثابت هفتگی</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="topbar">
+    <div class="badge" id="userBadge"></div>
+    <button class="btn btn-ghost btn-sm" onclick="doLogout()">🚪 خروج</button>
+  </div>
+
+  <div class="sync-status" id="syncStatus"></div>
+
+  <div class="card" id="cardAdd">
+    <h2><span class="dot"></span> کارکنان</h2>
+    <div class="add-row">
+      <input id="nameInput" type="text" placeholder="نام و نام خانوادگی کارمند را وارد کنید..." maxlength="60">
+      <button class="btn btn-accent" onclick="addEmployee()">➕ افزودن</button>
+    </div>
+    <br>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="card" id="cardAccounts">
+    <h2><span class="dot"></span> حساب‌های ورود کارکنان</h2>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:14px">
+      برای هر کارمند یک نام کاربری و رمز تعیین کنید تا بتواند از دستگاه خودش وارد سامانه شود. ثبت‌نام خودکار وجود ندارد.
+    </p>
+    <div id="accountsBox"></div>
+  </div>
+
+  <div class="card" id="cardSupervisor">
+    <h2><span class="dot"></span> حساب ورود مسوول</h2>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:14px">
+      مسوول فقط جدول هفتگی و وضعیت روزانه همه کارکنان را مشاهده می‌کند و اجازه تغییر ندارد.
+    </p>
+    <div class="acc-row">
+      <input id="supUser" type="text" placeholder="نام کاربری مسوول" value="">
+      <input id="supPass" type="text" placeholder="رمز عبور مسوول" value="">
+      <button class="btn btn-accent btn-sm" onclick="saveSupervisorCreds()">ذخیره</button>
+    </div>
+  </div>
+
+  <div class="card" id="cardAdmin">
+    <h2><span class="dot"></span> تغییر ایمیل و رمز مدیر</h2>
+    <div class="add-row">
+      <input id="newAdminEmail" type="email" placeholder="ایمیل جدید" style="flex:1">
+      <input id="newAdminPass" type="password" placeholder="رمز جدید (حداقل ۴ کاراکتر)" style="flex:1">
+      <button class="btn btn-accent" onclick="saveAdminCreds()">💾 ذخیره</button>
+    </div>
+  </div>
+
+  <div class="card" id="cardCleanup" style="display:none">
+    <h2><span class="dot"></span> پاک‌سازی رکوردهای قدیمی</h2>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:14px">
+      با گذشت زمان، برای هر تیک چند ردیف تکراری در دیتابیس ذخیره می‌شود. این دکمه نسخه‌های قدیمی را حذف می‌کند و از هر تیک فقط آخرین وضعیت را نگه می‌دارد — تیک‌های فعلی و برنامه‌ی نمایش‌داده‌شده هیچ تغییری نمی‌کنند.
+    </p>
+    <button class="btn btn-ghost btn-sm" onclick="cleanupOldRows()">🧹 پاک‌سازی رکوردهای قدیمی</button>
+  </div>
+
+  <div class="card" id="cardRecent" style="display:none">
+    <h2><span class="dot"></span> آخرین ویرایش‌ها</h2>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:14px" id="recentHint">
+      رزروهایی که در <b id="freshWindow">۵ ساعت</b> اخیر ثبت یا تغییر یافته‌اند — دکمه‌های تیک آن‌ها در جدول با هاله سبز مشخص شده است.
+    </p>
+    <div id="recentBox"></div>
+  </div>
+
+  <div class="card table-card" id="tableCard">
+    <h2><span class="dot"></span> جدول هفتگی وعده‌ها</h2>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:12px">
+      برنامه ثابت است: تیک‌هایی که هر کس زده، تا وقتی خودش تغییرشان ندهد، هر هفته هم‌به‌هم نمایش داده می‌شوند.
+    </p>
+    <div style="overflow-x:auto">
+      <table id="mainTable"></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="dot"></span> <span id="dailyTitle">وضعیت روزانه</span></h2>
+    <div class="days-grid" id="daysGrid"></div>
+    <div class="actions" id="bulkActions">
+      <button class="btn btn-ghost" onclick="toggleAll(true)">✅ تیک همه</button>
+      <button class="btn btn-ghost" onclick="toggleAll(false)">⭕ پاک کردن همه</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ================= اتصال به Supabase ================= */
+const SUPA_URL = 'https://dflhkdlbijkfqbjybhpe.supabase.co';
+const SUPA_KEY = 'sb_publishable_uY7G7o-HhZlh540jsaVs1g_jt6wqvY8';
+const API = SUPA_URL + '/rest/v1';
+
+const DAYS = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
+const MEALS = ['صبحانه','ناهار','شام'];
+const FA_DIGITS = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+const fa = n => String(n).replace(/\d/g, d => FA_DIGITS[d]);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+
+/* رزروهایی که تا این‌قدر دقیقه پیش ثبت یا تغییر یافته‌اند «تازه» حساب می‌شوند (۳۰۰ = ۵ ساعت) */
+const FRESH_MINUTES = 300;
+
+/* اگر ستون updated_at در جدول نباشد، خودکار بدون آن ادامه می‌دهیم */
+let hasUpdatedAt = true;
+
+/* وضعیت برنامه */
+let employees = [];          // [{id, name, username, password}]
+let settings = {};           // {admin_email, admin_password, supervisor_username, supervisor_password}
+let res = {};                // 'id-day-meal' -> {v: true/false, t: timestamp آخرین ویرایش, w: week_start ردیف}
+let session = JSON.parse(sessionStorage.getItem('mealSession') || 'null');
+let syncTimer = null;
+
+function syncMsg(t){
+  document.getElementById('syncStatus').textContent = t || '';
+}
+
+/* ---------- توکن‌های REST ---------- */
+function headers(extra){
+  return Object.assign({
+    'apikey': SUPA_KEY,
+    'Authorization': 'Bearer ' + SUPA_KEY,
+    'Content-Type': 'application/json'
+  }, extra || {});
+}
+async function sbGet(path){
+  const r = await fetch(API + path, { headers: headers() });
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+async function sbInsert(path, rows){
+  const r = await fetch(API + path, {
+    method:'POST',
+    headers: headers({'Prefer':'return=representation'}),
+    body: JSON.stringify(rows)
+  });
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+async function sbUpsert(path, rows, onConflict){
+  const r = await fetch(API + path + '?on_conflict=' + onConflict, {
+    method:'POST',
+    headers: headers({'Prefer':'resolution=merge-duplicates,return=representation'}),
+    body: JSON.stringify(rows)
+  });
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+async function sbPatch(path, body){
+  const r = await fetch(API + path, {
+    method:'PATCH',
+    headers: headers({'Prefer':'return=representation'}),
+    body: JSON.stringify(body)
+  });
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+async function sbDelete(path){
+  const r = await fetch(API + path, { method:'DELETE', headers: headers() });
+  if(!r.ok) throw new Error(await r.text());
+  return true;
+}
+
+/* ---------- تاریخ هفته (شنبه‌شروع — فقط برای برچسب «امروز» و week_start هنگام نوشتن) ---------- */
+function getWeekDates(){
+  const now = new Date();
+  const daysSinceSat = (now.getDay() + 1) % 7;
+  const start = new Date(now);
+  start.setDate(now.getDate() - daysSinceSat);
+  start.setHours(0,0,0,0);
+  return DAYS.map((_, i) => {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    return d;
+  });
+}
+function weekStartISO(){
+  const d = getWeekDates()[0];
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function isToday(d){
+  const n = new Date();
+  const wd = getWeekDates()[d];
+  return wd.getFullYear()===n.getFullYear() && wd.getMonth()===n.getMonth() && wd.getDate()===n.getDate();
+}
+
+/* ---------- بارگذاری رزروها ----------
+   برنامه ثابت است: همه ردیف‌های همه هفته‌ها خوانده می‌شود و برای هر
+   (کارمند، روز، وعده) آخرین نسخه (جدیدترین updated_at یا جدیدترین week_start)
+   نمایش داده می‌شود — یعنی رزروها با عوض شدن هفته پاک نمی‌شوند. */
+async function fetchReservations(){
+  if(hasUpdatedAt){
+    try{
+      return await sbGet('/reservations?select=employee_id,day,meal,value,updated_at,week_start');
+    }catch(e1){
+      // ستون updated_at وجود ندارد — بدون آن ادامه می‌دهیم
+      hasUpdatedAt = false;
+      const hint = document.getElementById('recentHint');
+      if(hint) hint.innerHTML = '⚠️ ستون <b>updated_at</b> هنوز در جدول ساخته نشده — برای فعال شدن «آخرین ویرایش‌ها» این دستور را در SQL Editor اجرا کنید:<br><code>ALTER TABLE reservations ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now();</code>';
+    }
+  }
+  return await sbGet('/reservations?select=employee_id,day,meal,value,week_start');
+}
+function parseReservations(resv){
+  res = {};
+  resv.forEach(r => {
+    const k = r.employee_id + '-' + r.day + '-' + r.meal;
+    const t = r.updated_at ? Date.parse(r.updated_at) : 0;
+    const w = r.week_start || '';
+    const cur = res[k];
+    if(!cur){
+      res[k] = { v: !!r.value, t: t, w: w };
+    } else if(t && (!cur.t || t > cur.t)){
+      res[k] = { v: !!r.value, t: t, w: w };
+    } else if(!t && !cur.t && w > cur.w){
+      res[k] = { v: !!r.value, t: t, w: w };
+    }
+  });
+}
+
+/* ---------- بارگذاری کامل داده ---------- */
+async function loadAll(){
+  const [emps, setts, resv] = await Promise.all([
+    sbGet('/employees?select=id,name,username,password&order=id.asc'),
+    sbGet('/settings?select=key,value'),
+    fetchReservations()
+  ]);
+  employees = emps.map(e => ({ id:e.id, name:e.name, username:e.username || '', password:e.password || '' }));
+  settings = {};
+  setts.forEach(s => settings[s.key] = s.value);
+  parseReservations(resv);
+}
+
+/* به‌روزرسانی خودکار رزروها برای مدیر و مسوول */
+setInterval(async () => {
+  if(!session || !(isAdmin() || isSupervisor())) return;
+  try{
+    const resv = await fetchReservations();
+    parseReservations(resv);
+    render();
+  }catch(e){ /* بی‌صدا */ }
+}, 60000);
+
+/* ---------- دسترسی به داده ---------- */
+function rkey(id, d, m){ return id + '-' + d + '-' + m; }
+function get(id, d, m){
+  const r = res[rkey(id,d,m)];
+  return !!(r && r.v === true);
+}
+function freshTs(id, d, m){
+  const r = res[rkey(id,d,m)];
+  return (r && r.v && r.t) ? r.t : 0;
+}
+function isFresh(id, d, m){
+  const t = freshTs(id,d,m);
+  return t && (Date.now() - t) <= FRESH_MINUTES * 60000;
+}
+function timeAgo(ts){
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if(s < 60) return 'چند لحظه پیش';
+  const m = Math.floor(s / 60);
+  if(m < 60) return fa(m) + ' دقیقه پیش';
+  const h = Math.floor(m / 60);
+  if(h < 24) return fa(h) + ' ساعت پیش';
+  return fa(Math.floor(h / 24)) + ' روز پیش';
+}
+
+function isAdmin(){ return session && session.type === 'admin'; }
+function isSupervisor(){ return session && session.type === 'supervisor'; }
+function me(){
+  if(!session || session.type !== 'employee') return null;
+  return employees.find(e => e.id === session.id) || null;
+}
+
+/* ---------- پیام خطای ورود (با متن واقعی سرور) ---------- */
+function serverErrText(err){
+  let t = (err && err.message) ? String(err.message) : '';
+  try{ t = t.replace(/\s+/g,' ').slice(0, 180); }catch(e){}
+  return t || 'پاسخی از سرور دریافت نشد';
+}
+
+/* ---------- ورود / خروج ---------- */
+function switchTab(t){
+  document.getElementById('tabAdmin').classList.toggle('active', t==='admin');
+  document.getElementById('tabEmp').classList.toggle('active', t==='emp');
+  document.getElementById('tabSup').classList.toggle('active', t==='sup');
+  document.getElementById('formAdmin').style.display = t==='admin' ? '' : 'none';
+  document.getElementById('formEmp').style.display = t==='emp' ? '' : 'none';
+  document.getElementById('formSup').style.display = t==='sup' ? '' : 'none';
+  document.getElementById('loginErr').style.display = 'none';
+}
+function loginError(msg){
+  const el = document.getElementById('loginErr');
+  el.textContent = msg; el.style.display = 'block';
+}
+
+async function loginAdmin(e){
+  e.preventDefault();
+  const btn = document.getElementById('btnAdmLogin');
+  btn.disabled = true; btn.textContent = 'در حال بررسی...';
+  try{
+    await loadAll();
+    const em = document.getElementById('admEmail').value.trim().toLowerCase();
+    const pw = document.getElementById('admPass').value;
+    const ae = (settings.admin_email || 'admin@company.com').toLowerCase();
+    const ap = settings.admin_password || 'admin123';
+    if(em === ae && pw === ap){
+      startSession({ type:'admin' });
+    } else {
+      loginError('ایمیل یا رمز عبور مدیر اشتباه است.');
+    }
+  }catch(err){
+    loginError('خطا در اتصال به سرور: ' + serverErrText(err));
+    console.error(err);
+  }
+  btn.disabled = false; btn.textContent = 'ورود به پنل مدیریت';
+  return false;
+}
+
+async function loginEmployee(e){
+  e.preventDefault();
+  const btn = document.getElementById('btnEmpLogin');
+  btn.disabled = true; btn.textContent = 'در حال بررسی...';
+  try{
+    await loadAll();
+    const u = document.getElementById('empUser').value.trim();
+    const p = document.getElementById('empPass').value;
+    const emp = employees.find(x => x.username === u);
+    if(!emp || emp.password !== p){
+      loginError('نام کاربری یا رمز عبور اشتباه است، یا حساب شما هنوز ساخته نشده است.');
+    } else {
+      startSession({ type:'employee', id: emp.id });
+    }
+  }catch(err){
+    loginError('خطا در اتصال به سرور: ' + serverErrText(err));
+    console.error(err);
+  }
+  btn.disabled = false; btn.textContent = 'ورود';
+  return false;
+}
+
+async function loginSupervisor(e){
+  e.preventDefault();
+  const btn = document.getElementById('btnSupLogin');
+  btn.disabled = true; btn.textContent = 'در حال بررسی...';
+  try{
+    await loadAll();
+    const u = document.getElementById('lgSupUser').value.trim();
+    const p = document.getElementById('lgSupPass').value;
+    const su = settings.supervisor_username;
+    const sp = settings.supervisor_password;
+    if(!su || !sp){
+      loginError('حساب مسوول هنوز توسط مدیر ساخته نشده است.');
+    } else if(u === su && p === sp){
+      startSession({ type:'supervisor' });
+    } else {
+      loginError('نام کاربری یا رمز عبور مسوول اشتباه است.');
+    }
+  }catch(err){
+    loginError('خطا در اتصال به سرور: ' + serverErrText(err));
+    console.error(err);
+  }
+  btn.disabled = false; btn.textContent = 'ورود به پنل مسوول';
+  return false;
+}
+
+function startSession(s){
+  session = s;
+  sessionStorage.setItem('mealSession', JSON.stringify(s));
+  showApp();
+}
+function doLogout(){
+  session = null;
+  sessionStorage.removeItem('mealSession');
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginErr').style.display = 'none';
+  document.getElementById('admPass').value = '';
+  document.getElementById('empPass').value = '';
+  document.getElementById('lgSupPass').value = '';
+}
+
+/* ---------- عملیات مدیر ---------- */
+async function addEmployee(){
+  const inp = document.getElementById('nameInput');
+  const name = inp.value.trim();
+  if(!name){ inp.focus(); return; }
+  if(employees.some(e => e.name === name)){ inp.value=''; return; }
+  try{
+    syncMsg('⏳ در حال ذخیره...');
+    const row = await sbInsert('/employees', { name });
+    employees.push({ id:row[0].id, name:row[0].name, username:row[0].username || '', password:row[0].password || '' });
+    inp.value=''; inp.focus();
+    render();
+    syncMsg('✅ ذخیره شد');
+  }catch(err){
+    syncMsg(''); alert('خطا در ذخیره کارمند: ' + serverErrText(err));
+  }
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => syncMsg(''), 2500);
+}
+
+async function removeEmployee(id){
+  if(!confirm('این کارمند و همه رزروهایش حذف شود؟')) return;
+  try{
+    syncMsg('⏳ در حال حذف...');
+    await sbDelete('/reservations?employee_id=eq.' + id);
+    await sbDelete('/employees?id=eq.' + id);
+    employees = employees.filter(e => e.id !== id);
+    Object.keys(res).forEach(k => { if(k.split('-')[0] === String(id)) delete res[k]; });
+    render();
+    syncMsg('✅ حذف شد');
+  }catch(err){
+    syncMsg(''); alert('خطا در حذف: ' + serverErrText(err));
+  }
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => syncMsg(''), 2500);
+}
+
+/* پاک‌سازی رکوردهای قدیمی: از هر (کارمند، روز، وعده) فقط آخرین نسخه نگه داشته می‌شود */
+async function cleanupOldRows(){
+  if(!confirm('نسخه‌های قدیمی رزروها حذف شوند؟\nاز هر تیک فقط آخرین وضعیت باقی می‌ماند و تیک‌های فعلی تغییری نمی‌کنند.')) return;
+  try{
+    syncMsg('⏳ در حال پاک‌سازی...');
+    const rows = await fetchReservations();
+
+    // آخرین نسخه هر (کارمند، روز، وعده)
+    const kept = {};
+    rows.forEach(r => {
+      const k = r.employee_id + '-' + r.day + '-' + r.meal;
+      const t = r.updated_at ? Date.parse(r.updated_at) : 0;
+      const w = r.week_start || '';
+      const cur = kept[k];
+      if(!cur){
+        kept[k] = { t, w };
+      } else if(t && (!cur.t || t > cur.t)){
+        kept[k] = { t, w };
+      } else if(!t && !cur.t && w > cur.w){
+        kept[k] = { t, w };
+      }
+    });
+
+    // برای هر کارمند فقط هفته‌هایی نگه داشته می‌شوند که نسخه نهایی بعضی تیک‌ها در آن است
+    const empIds = [...new Set(rows.map(r => r.employee_id))];
+    for(const eid of empIds){
+      const weeks = [...new Set(
+        Object.keys(kept)
+          .filter(k => k.split('-')[0] === String(eid))
+          .map(k => kept[k].w)
+          .filter(Boolean)
+      )];
+      let path = '/reservations?employee_id=eq.' + eid;
+      if(weeks.length){
+        path += '&week_start=not.in.(' + weeks.map(w => '"' + w + '"').join(',') + ')';
+      }
+      await sbDelete(path);
+    }
+
+    syncMsg('✅ پاک‌سازی انجام شد');
+    alert('پاک‌سازی انجام شد ✅ — نسخه‌های قدیمی حذف شدند و از هر تیک فقط آخرین وضعیت باقی ماند. تیک‌های فعلی تغییری نکرده‌اند.');
+  }catch(err){
+    syncMsg(''); alert('خطا در پاک‌سازی: ' + serverErrText(err));
+  }
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => syncMsg(''), 2500);
+}
+
+async function saveAccount(id){
+  const emp = employees.find(x => x.id === id);
+  if(!emp) return;
+  const u = document.getElementById('u-'+id).value.trim();
+  const p = document.getElementById('p-'+id).value.trim();
+  if(!u || !p){ alert('نام کاربری و رمز عبور را وارد کنید.'); return; }
+  if(employees.some(x => x.id !== id && x.username === u)){
+    alert('این نام کاربری قبلاً برای کارمند دیگری ثبت شده است.'); return;
+  }
+  try{
+    syncMsg('⏳ در حال ذخیره...');
+    await sbPatch('/employees?id=eq.' + id, { username:u, password:p });
+    emp.username = u; emp.password = p;
+    render();
+    alert('حساب «' + emp.name + '» ذخیره شد ✅ — از این لحظه می‌تواند از هر دستگاهی وارد شود.');
+    syncMsg('✅ ذخیره شد');
+  }catch(err){
+    syncMsg(''); alert('خطا در ذخیره حساب: ' + serverErrText(err));
+  }
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => syncMsg(''), 2500);
+}
+
+async function saveSupervisorCreds(){
+  const u = document.getElementById('supUser').value.trim();
+  const p = document.getElementById('supPass').value.trim();
+  if(!u || !p){ alert('نام کاربری و رمز عبور مسوول را وارد کنید.'); return; }
+  try{
+    syncMsg('⏳ در حال ذخیره...');
+    await sbUpsert('/settings',
+      [{ key:'supervisor_username', value:u }, { key:'supervisor_password', value:p }],
+      'key');
+    settings.supervisor_username = u;
+    settings.supervisor_password = p;
+    syncMsg('✅ ذخیره شد');
+    alert('حساب مسوول ذخیره شد ✅ — از این لحظه می‌تواند از تب «ورود مسوول» وارد شود.');
+  }catch(err){
+    syncMsg(''); alert('خطا در ذخیره حساب مسوول: ' + serverErrText(err));
+  }
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => syncMsg(''), 2500);
+}
+
+async function saveAdminCreds(){
+  const em = document.getElementById('newAdminEmail').value.trim();
+  const pw = document.getElementById('newAdminPass').value;
+  if(!em || !/^\S+@\S+\.\S+$/.test(em)){ alert('یک ایمیل معتبر وارد کنید.'); return; }
+  if(pw && pw.length < 4){ alert('رمز جدید حداقل باید ۴ کاراکتر باشد.'); return; }
+  try{
+    syncMsg('⏳ در حال ذخیره...');
+    await sbPatch('/settings?key=eq.admin_email', { value: em });
+    if(pw) await sbPatch('/settings?key=eq.admin_password', { value: pw });
+    settings.admin_email = em;
+    if(pw) settings.admin_password = pw;
+    document.getElementById('newAdminEmail').value = '';
+    document.getElementById('newAdminPass').value = '';
+    syncMsg('✅ ذخیره شد');
+    alert('اطلاعات ورود مدیر به‌روزرسانی شد ✅');
+  }catch(err){
+    syncMsg(''); alert('خطا در ذخیره: ' + serverErrText(err));
+  }
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => syncMsg(''), 2500);
+}
+
+/* ---------- رزرو ----------
+   week_start فقط برای کامل بودن ردیف در دیتابیس نوشته می‌شود (هفته‌ی لحظه‌ی ویرایش)
+   و در نمایش نقشی ندارد — آخرین ویرایش همیشه برنده است. */
+async function flip(id, d, m, el){
+  const v = !get(id,d,m);
+  el.classList.add('busy');
+  const now = Date.now();
+  const prev = res[rkey(id,d,m)];
+  res[rkey(id,d,m)] = { v, t: now, w: weekStartISO() };
+  render();
+  try{
+    const row = { employee_id:id, week_start:weekStartISO(), day:d, meal:m, value:v };
+    if(hasUpdatedAt) row.updated_at = new Date(now).toISOString();
+    await sbUpsert('/reservations', [row], 'employee_id,week_start,day,meal');
+    syncMsg('✅ ذخیره شد');
+  }catch(err){
+    res[rkey(id,d,m)] = prev || { v: !v, t: 0, w: weekStartISO() };
+    render();
+    syncMsg(''); alert('خطا در ذخیره رزرو: ' + serverErrText(err));
+  }
+  el.classList.remove('busy');
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => syncMsg(''), 2000);
+}
+
+async function toggleAll(v){
+  const list = isAdmin()
+    ? employees.map(e => e.id)
+    : (me() ? [me().id] : []);
+  if(!list.length) return;
+  try{
+    syncMsg('⏳ در حال ذخیره...');
+    const nowIso = new Date().toISOString();
+    const nowW = weekStartISO();
+    const rows = [];
+    list.forEach(id => DAYS.forEach((_,d) => MEALS.forEach((_,m) => {
+      res[rkey(id,d,m)] = { v, t: Date.now(), w: nowW };
+      const row = { employee_id:id, week_start:nowW, day:d, meal:m, value:v };
+      if(hasUpdatedAt) row.updated_at = nowIso;
+      rows.push(row);
+    })));
+    render();
+    await sbUpsert('/reservations', rows, 'employee_id,week_start,day,meal');
+    syncMsg('✅ ذخیره شد');
+  }catch(err){
+    syncMsg(''); alert('خطا در ذخیره: ' + serverErrText(err));
+  }
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => syncMsg(''), 2500);
+}
+
+/* ---------- شمارش‌ها ---------- */
+function countPerson(id){
+  return DAYS.reduce((s,_,d)=> s + MEALS.reduce((s2,_,m)=> s2 + (get(id,d,m)?1:0), 0), 0);
+}
+function countDay(d){
+  return employees.reduce((s,e)=> s + MEALS.reduce((s2,_,m)=> s2 + (get(e.id,d,m)?1:0), 0), 0);
+}
+function countAll(){
+  return DAYS.reduce((s,_,d)=> s + countDay(d), 0);
+}
+
+/* ---------- نمایش ---------- */
+function showApp(){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = '';
+  render();
+}
+
+function render(){
+  const admin = isAdmin();
+  const sup = isSupervisor();
+  const meEmp = me();
+
+  const badge = document.getElementById('userBadge');
+  if(admin){
+    badge.innerHTML = '<span>🛡️</span><b>پنل مدیریت</b><span class="role">دسترسی کامل</span>';
+    document.getElementById('headerSub').textContent = 'ثبت حضور کارکنان در وعده‌های صبحانه، ناهار و شام — برنامه ثابت هفتگی';
+  } else if(sup){
+    badge.innerHTML = '<span>📋</span><b>پنل مسوول</b><span class="role">فقط مشاهده</span>';
+    document.getElementById('headerSub').textContent = 'مشاهده رزروهای کارکنان — برنامه ثابت هفتگی';
+  } else {
+    badge.innerHTML = '<span>👷</span><b>' + esc(meEmp ? meEmp.name : '') + '</b><span class="role">پنل کارمند</span>';
+    document.getElementById('headerSub').textContent = 'رزرو وعده‌های غذایی شما — برنامه ثابت هفتگی';
+  }
+
+  document.getElementById('cardAdd').style.display = admin ? '' : 'none';
+  document.getElementById('cardAccounts').style.display = admin ? '' : 'none';
+  document.getElementById('cardSupervisor').style.display = admin ? '' : 'none';
+  document.getElementById('cardAdmin').style.display = admin ? '' : 'none';
+  document.getElementById('cardCleanup').style.display = admin ? '' : 'none';
+  document.getElementById('cardRecent').style.display = (admin || sup) ? '' : 'none';
+  document.getElementById('bulkActions').style.display = admin ? '' : 'none';
+  document.getElementById('dailyTitle').textContent = (admin || sup) ? 'وضعیت روزانه (همه کارکنان)' : 'وضعیت روزانه شما';
+  document.getElementById('freshWindow').textContent = fa(FRESH_MINUTES / 60) + ' ساعت';
+
+  if(admin){
+    const su = document.getElementById('supUser');
+    const sp = document.getElementById('supPass');
+    if(su) su.value = settings.supervisor_username || '';
+    if(sp) sp.value = settings.supervisor_password || '';
+  }
+
+  // chips
+  const chips = document.getElementById('chips');
+  if(!employees.length){
+    chips.innerHTML = '<div class="empty">هنوز کارمندی اضافه نشده است — از کادر بالا نام‌ها را وارد کنید.</div>';
+  } else {
+    chips.innerHTML = employees.map(e =>
+      `<div class="chip">
+        <span class="avatar">${esc((e.name||'؟').trim()[0])}</span>
+        ${esc(e.name)}
+        <button title="حذف" onclick="removeEmployee(${e.id})">✕</button>
+      </div>`).join('');
+  }
+
+  // accounts
+  const accBox = document.getElementById('accountsBox');
+  if(!employees.length){
+    accBox.innerHTML = '<div class="empty">ابتدا از بخش «کارکنان» کارمند اضافه کنید.</div>';
+  } else {
+    accBox.innerHTML = employees.map(e => `
+      <div class="acc-row">
+        <div class="acc-name"><span class="avatar">${esc((e.name||'؟').trim()[0])}</span>${esc(e.name)}</div>
+        <input id="u-${e.id}" placeholder="نام کاربری" value="${esc(e.username)}">
+        <input id="p-${e.id}" type="text" placeholder="رمز عبور" value="${esc(e.password)}">
+        <span class="acc-status ${e.username ? 'ok' : ''}">${e.username ? '✅ حساب فعال' : '⏳ بدون حساب'}</span>
+        <button class="btn btn-accent btn-sm" onclick="saveAccount(${e.id})">ذخیره</button>
+      </div>`).join('');
+  }
+
+  // آخرین ویرایش‌ها
+  const recentBox = document.getElementById('recentBox');
+  const rec = [];
+  if(hasUpdatedAt){
+    Object.keys(res).forEach(k => {
+      const r = res[k];
+      if(r && r.v && r.t && (Date.now() - r.t) <= FRESH_MINUTES * 60000){
+        const parts = k.split('-');
+        const id = parts[0], d = +parts[1], m = +parts[2];
+        const e = employees.find(x => String(x.id) === id);
+        if(e) rec.push({ name:e.name, d, m, t:r.t });
+      }
+    });
+    rec.sort((a,b) => b.t - a.t);
+  }
+  if(!rec.length){
+    recentBox.innerHTML = '<div class="empty">' + (hasUpdatedAt ? 'در این بازه ویرایش تازه‌ای ثبت نشده است.' : 'نیاز به اجرای دستور SQL (به توضیح بالای این کادر توجه کنید).') + '</div>';
+  } else {
+    recentBox.innerHTML = rec.slice(0, 20).map(x => `
+      <div class="recent-item">
+        <span><b>${esc(x.name)}</b> <span class="what">— ${DAYS[x.d]}، ${MEALS[x.m]} ✅</span></span>
+        <span class="fresh-tag">${timeAgo(x.t)}</span>
+      </div>`).join('');
+  }
+
+  // جدول
+  const shown = (admin || sup)
+    ? employees.map(e => e.id)
+    : (meEmp ? [meEmp.id] : []);
+
+  const t = document.getElementById('mainTable');
+  let html = '<thead><tr><th style="text-align:right;padding-right:14px">کارمند</th>';
+  DAYS.forEach(d => html += `<th class="day">${d}</th>`);
+  html += '<th>مجموع</th></tr></thead><tbody>';
+
+  shown.forEach(id => {
+    const e = employees.find(x => x.id === id);
+    if(!e) return;
+    html += `<tr><td class="name">${esc(e.name)}<span class="sub">${fa(countPerson(id))} وعده در هفته</span></td>`;
+    DAYS.forEach((_,d) => {
+      html += '<td><div class="day-cell">';
+      MEALS.forEach((meal,m) => {
+        const on = get(id,d,m);
+        const cls = (on ? 'on ' : '') + ((admin || meEmp) && on && isFresh(id,d,m) ? 'fresh ' : '') + (sup ? 'ro' : '');
+        html += `<div class="meal-row"><span>${meal}</span>`;
+        if(sup){
+          html += `<button class="toggle ${cls}"></button>`;
+        } else {
+          html += `<button class="toggle ${cls}" onclick="flip(${id},${d},${m},this)"></button>`;
+        }
+        html += '</div>';
+      });
+      html += '</div></td>';
+    });
+    html += `<td class="total">${fa(countPerson(id))}</td></tr>`;
+  });
+
+  if(!shown.length){
+    html += `<tr><td colspan="9" class="empty">هنوز داده‌ای برای نمایش وجود ندارد.</td></tr>`;
+  }
+
+  if(admin || sup){
+    html += '<tr class="footer-row"><td class="name">جمع هر روز</td>';
+    DAYS.forEach((_,d) => html += `<td>${fa(countDay(d))}</td>`);
+    html += `<td>${fa(countAll())}</td></tr>`;
+  }
+  html += '</tbody>';
+  t.innerHTML = html;
+
+  // کارت‌های روزانه (بدون تاریخ — فقط روز هفته و برچسب «امروز»)
+  const grid = document.getElementById('daysGrid');
+  grid.innerHTML = DAYS.map((dayName, d) => {
+    const mealCounts = MEALS.map((_, m) =>
+      shown.reduce((s, id) => s + (get(id,d,m)?1:0), 0));
+    const todayCls = isToday(d) ? ' today' : '';
+    const rows = MEALS.map((meal, m) => `
+      <div class="d-row ${mealCounts[m]===0?'zero':''}">
+        <span>${meal}</span><span class="d-val">${fa(mealCounts[m])}</span>
+      </div>`).join('');
+    const totalRow = (admin || sup) ? '' : `
+      <div class="d-total"><span>جمع روز</span><b>${fa(mealCounts.reduce((a,b)=>a+b,0))}</b></div>`;
+    return `
+      <div class="day-card${todayCls}">
+        <div class="d-name">${dayName}</div>
+        <div class="d-counts">${rows}</div>
+        ${totalRow}
+      </div>`;
+  }).join('');
+}
+
+// Enter key
+document.getElementById('nameInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter') addEmployee();
+});
+
+/* ---------- شروع برنامه ---------- */
+(async function init(){
+  if(session){
+    // نشست قبلی — سعی در بازیابی
+    try{
+      await loadAll();
+      if(isAdmin() || isSupervisor() || me()){ showApp(); return; }
+    }catch(err){
+      console.error(err);
+    }
+    session = null;
+    sessionStorage.removeItem('mealSession');
+  }
+  document.getElementById('loginScreen').style.display = 'flex';
+})();
+</script>
+</body>
+</html>
